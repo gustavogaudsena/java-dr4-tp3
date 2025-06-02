@@ -1,29 +1,25 @@
-package TP3_08;
+package TP3_09;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
-public class TP3_08 {
+public class TP3_09 {
     public static void main(String[] args) throws IOException, URISyntaxException {
-        int currentId = 10;
-        String data = """
-                {
-                    "name": "atualizado"
-                }
-                """;
+        int currentId = 9;
+
         try {
-            String responseGet = getDataById(currentId);
-            String responsePut = putData(data, currentId);
+            String responseDelete = deleteById(currentId);
             String responseGetAfter = getDataById(currentId);
-            System.out.printf("GET: %s", responseGet);
-            System.out.printf("PUT: %s", responsePut);
+            System.out.printf("DELETE: %s", responseDelete);
             System.out.printf("GET: %s", responseGetAfter);
         } catch (Exception e) {
-            System.out.printf(e.getMessage());
+            e.printStackTrace();
         }
 
     }
@@ -39,7 +35,7 @@ public class TP3_08 {
 
         int status = conn.getResponseCode();
         InputStreamReader streamReader;
-        System.out.println("Status: " + status);
+        System.out.println("GET Status: " + status);
 
         if (status == HttpURLConnection.HTTP_OK) {
             streamReader = new InputStreamReader(conn.getInputStream());
@@ -131,4 +127,37 @@ public class TP3_08 {
 
         return content.toString();
     }
+
+    public static String deleteById(int id) throws IOException, URISyntaxException {
+        URL url = new URI("https://apichallenges.eviltester.com/sim/entities/" + id).toURL();
+
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        conn.setRequestMethod("DELETE");
+        conn.setRequestProperty("Accept", "application/json");
+        conn.setRequestProperty("Content-Type", "application/json");
+
+        int status = conn.getResponseCode();
+        InputStreamReader streamReader;
+        System.out.println("DELETE STATUS: " + status);
+
+
+        streamReader = new InputStreamReader(conn.getInputStream());
+
+        BufferedReader in = new BufferedReader(streamReader);
+
+        String inputLine;
+        StringBuilder content = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine).append("\n");
+        }
+
+
+        in.close();
+        conn.disconnect();
+
+        return content.toString();
+    }
+
 }

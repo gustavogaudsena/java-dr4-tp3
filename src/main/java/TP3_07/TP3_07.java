@@ -18,8 +18,10 @@ public class TP3_07 {
         try {
             String responseGet = getDataById(currentId);
             String responsePost = postData(data, currentId);
-            System.out.printf("POST: %s", responsePost);
+            String responseGetAfter = getDataById(currentId);
             System.out.printf("GET: %s",  responseGet);
+            System.out.printf("POST: %s", responsePost);
+            System.out.printf("GET: %s",  responseGetAfter);
         } catch (Exception e) {
             System.out.printf(e.getMessage());
         }
